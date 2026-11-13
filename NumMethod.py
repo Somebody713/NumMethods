@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.optimize as sc
 def f(x):
     return 2*x**3-11.7*x**2+17.7*x-5
 def df(x):
@@ -10,7 +11,9 @@ def df2(x):
     return 1.5*x**2-8*x+5.5-1
 def f3(x):
     return x**6-x-1
-def Real_Root(coeficients,root,f,index):
+def f4(x):
+    return x*np.cos(x/(x-2))
+def Linear_Real_Root(coeficients,root,f,index):
     roots=np.roots(coeficients)
     real_roots=np.sort(roots[np.isreal(roots)]).real
     print(f'Real Roots: {real_roots}')
@@ -19,6 +22,13 @@ def Real_Root(coeficients,root,f,index):
     if root is not None:
         errorS=abs((answer-root)/answer)
         print(f"ErrorS: {errorS}")
+def Non_Linear_Real_Root(initial_guess,root,f):
+    real_root=sc.fsolve(f,initial_guess)[0]
+    print(f'Real Root: {real_root} Answer: {f(real_root)}')
+    if root is not None:
+        errorS=abs((real_root-root))
+        print(f'ErrorS: {errorS}')
+    
 def Plotter(root,f,label_f):
     x=np.linspace(-10,10,500)
     y=f(x)
@@ -77,7 +87,7 @@ def Secant_Method(x0,x1,f,n,eps=0):
     while iterations<n:
         if f(x1)-f(x0)==0:
             return None
-        errorB=abs(x1-x0)
+        errorB=abs((x1-x0)/x1)
         if errorB<eps:
             print("it below than eps")
             break
@@ -93,9 +103,9 @@ def Secant_Method(x0,x1,f,n,eps=0):
     return x1
         
         
-root=Secant_Method(1,1.5,f3,100,0.001)
-Real_Root([1,0,0,0,0,-1,-1],root,f3,1)
-Plotter(root,f3,"-1+5.5*x-4*x**2+0.5*x**3")
+root=Secant_Method(0,1,f4,100,0.001)
+Non_Linear_Real_Root(0.8,root,f4)
+Plotter(root,f4,"-1+5.5*x-4*x**2+0.5*x**3")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
