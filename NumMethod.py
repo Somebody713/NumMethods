@@ -8,7 +8,8 @@ def f2(x):
     return -1+5.5*x-4*x**2+0.5*x**3
 def df2(x):
     return 1.5*x**2-8*x+5.5-1
-
+def f3(x):
+    return x**6-x-1
 def Real_Root(coeficients,root,f,index):
     roots=np.roots(coeficients)
     real_roots=np.sort(roots[np.isreal(roots)]).real
@@ -70,11 +71,31 @@ def Newton_Raphson(x0,f,df,n,eps=0):
     if old_x0 is not None and iterations>1:
         print(f'ErrorA: {errorA}')
     return x0
+def Secant_Method(x0,x1,f,n,eps=0):
+    iterations=0
+    
+    while iterations<n:
+        if f(x1)-f(x0)==0:
+            return None
+        errorB=abs(x1-x0)
+        if errorB<eps:
+            print("it below than eps")
+            break
+        temp=x1
+        x1=x0-f(x0)*(x1-x0)/(f(x1)-f(x0))
+        iterations+=1
+        x0=temp
+        if f(x1)==0:
+            print("Real root found")
+            break
+    print(f'Root: {x1} Answer: {f(x1)} Iterations: {iterations}')
+    print(f'ErrorB: {errorB}')
+    return x1
         
         
-root=Bisection_Method(1,3,100,f2,0.001)
-Real_Root([0.5,-4,5.5,-1],root,f2,2)
-Plotter(root,f2,"-1+5.5*x-4*x**2+0.5*x**3")
+root=Secant_Method(1,1.5,f3,100,0.001)
+Real_Root([1,0,0,0,0,-1,-1],root,f3,1)
+Plotter(root,f3,"-1+5.5*x-4*x**2+0.5*x**3")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
