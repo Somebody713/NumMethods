@@ -13,6 +13,17 @@ def f3(x):
     return x**6-x-1
 def f4(x):
     return x*np.cos(x/(x-2))
+def f5(x):
+    #dont have real root
+    return x**2-(np.exp(-2*x)-1)/x
+def f6(x):
+    return np.exp(x**2-1)+10*np.sin(2*x)-5
+def f7(x):
+    return np.exp(x)-3*x**2
+def f8(x):
+    return np.tan(x)-x-1
+def f9(x):
+    return np.sin(2*x)-np.exp(x-1)
 def Linear_Real_Root(coeficients,root,f,index):
     roots=np.roots(coeficients)
     real_roots=np.sort(roots[np.isreal(roots)]).real
@@ -87,7 +98,7 @@ def Secant_Method(x0,x1,f,n,eps=0):
     while iterations<n:
         if f(x1)-f(x0)==0:
             return None
-        errorB=abs((x1-x0)/x1)
+        errorB=abs((x1-x0))
         if errorB<eps:
             print("it below than eps")
             break
@@ -103,9 +114,9 @@ def Secant_Method(x0,x1,f,n,eps=0):
     return x1
         
         
-root=Secant_Method(0,1,f4,100,0.001)
-Non_Linear_Real_Root(0.8,root,f4)
-Plotter(root,f4,"-1+5.5*x-4*x**2+0.5*x**3")
+root=Secant_Method(0,0.5,f9,100,0.001)
+Non_Linear_Real_Root(0.6,root,f9)
+Plotter(root,f9,"function")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
