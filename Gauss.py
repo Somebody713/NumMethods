@@ -13,14 +13,15 @@ def Forward(matrix,vector):
                 max_raw=m
         matrix[k],matrix[max_raw]=matrix[max_raw],matrix[k]
         vector[k],vector[max_raw]=vector[max_raw],vector[k]
+        scalar[k],scalar[max_raw]=scalar[max_raw],scalar[k]
         for i in range(k+1,len(matrix)):
             
             
             factor=matrix[i][k]/matrix[k][k]
             
             for j in range(len(matrix[i])):
-                matrix[i][j]=matrix[i][j]-factor*matrix[k][j]
-            vector[k]=vector[k]-vector[k]*factor
+                matrix[i][j]=matrix[i][j]-factor*matrix[i-1][j]
+            vector[k]=vector[k]-vector[i-1]*factor
 def Backward(matrix,vector):
     x=[0]*len(matrix)
     for k in range(len(matrix)-1,-1,-1):
