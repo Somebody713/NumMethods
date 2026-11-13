@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 def f(x):
-    return -0.6*x**2+2.4*x+5.5
+    return 2*x**3-11.7*x**2+17.7*x-5
 def df(x):
-    return -1.2*x+2.4
+    return 6*x**2-23.4*x+17.7
 def f2(x):
     return 4*x**3-6*x**2+7*x-2.3
 def f3(x):
@@ -51,10 +51,32 @@ def Bisection_Method(a,b,n,f,eps=0):
     if old_mid is not None and iterations>1:
         print(f"ErrorA: {errorA}")
     return mid
+def Newton_Raphson(x0,f,df,n,eps=0):
+    iterations=0
+    old_x0=None
     
-root=Bisection_Method(-3,1,100,f3,0.0001)
-Real_Root([1,0,-3],root,f3,1)
-Plotter(root,f3,"x**2-3")
+    while iterations<n:
+        if df(x0)==0:
+            return None
+        if f(x0)==0:
+            print("Real root found")
+            break
+        iterations+=1
+        old_x0=x0
+        x0=old_x0-f(x0)/df(x0)
+        errorA=abs((x0-old_x0)/x0)
+        if errorA<eps:
+            print("It is below eps")
+            break
+    print(f'Root: {x0} Answer: {f(x0)} ErrorA: {errorA}')
+    if old_x0 is not None and iterations>1:
+        print(f'ErrorA: {errorA}')
+    return x0
+        
+        
+root=Newton_Raphson(3,f,df,3)
+Real_Root([2,-11.7,17.7,-5],root,f,2)
+Plotter(root,f,"2*x**3-11.7*x**2+17.7*x-5")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
