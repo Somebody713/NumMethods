@@ -29,7 +29,6 @@ def Plotter(root,f,label_f):
     plt.scatter(x_real,y_real,color='red',label="Root")
 def Bisection_Method(a,b,n,f,eps=0):
     iterations=0
-    old_mid=None
     while iterations<n:
         if f(a)*f(b)>0:
             return None
@@ -42,14 +41,12 @@ def Bisection_Method(a,b,n,f,eps=0):
         else:
             a=mid
         iterations+=1
-        if old_mid is not None:
-            errorA=abs((mid-old_mid)/mid)
-            if errorA<eps:
-                print("it is below eps")
-                break
-        old_mid=mid
+        errorA=abs((b-a)/2)
+        if errorA<eps:
+            print("it is below eps")
+            break
     print(f'Root: {mid} Answer: {f(mid)} Iterations: {iterations}')
-    if old_mid is not None and iterations>1:
+    if iterations>1:
         print(f"ErrorA: {errorA}")
     return mid
 def Newton_Raphson(x0,f,df,n,eps=0):
@@ -75,9 +72,9 @@ def Newton_Raphson(x0,f,df,n,eps=0):
     return x0
         
         
-root=Newton_Raphson(3,f2,df2,100,0.0001)
-Real_Root([0.5,-4,5.5,-1],root,f2,1)
-Plotter(root,f,"-1+5.5*x-4*x**2+0.5*x**3")
+root=Bisection_Method(1,3,100,f2,0.001)
+Real_Root([0.5,-4,5.5,-1],root,f2,2)
+Plotter(root,f2,"-1+5.5*x-4*x**2+0.5*x**3")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
