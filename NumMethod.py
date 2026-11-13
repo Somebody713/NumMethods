@@ -5,9 +5,10 @@ def f(x):
 def df(x):
     return 6*x**2-23.4*x+17.7
 def f2(x):
-    return 4*x**3-6*x**2+7*x-2.3
-def f3(x):
-    return x**2-3
+    return -1+5.5*x-4*x**2+0.5*x**3
+def df2(x):
+    return 1.5*x**2-8*x+5.5-1
+
 def Real_Root(coeficients,root,f,index):
     roots=np.roots(coeficients)
     real_roots=np.sort(roots[np.isreal(roots)]).real
@@ -68,15 +69,15 @@ def Newton_Raphson(x0,f,df,n,eps=0):
         if errorA<eps:
             print("It is below eps")
             break
-    print(f'Root: {x0} Answer: {f(x0)} ErrorA: {errorA}')
+    print(f'Root: {x0} Answer: {f(x0)} ErrorA: {errorA} Iterations: {iterations}')
     if old_x0 is not None and iterations>1:
         print(f'ErrorA: {errorA}')
     return x0
         
         
-root=Newton_Raphson(3,f,df,3)
-Real_Root([2,-11.7,17.7,-5],root,f,2)
-Plotter(root,f,"2*x**3-11.7*x**2+17.7*x-5")
+root=Newton_Raphson(3,f2,df2,100,0.0001)
+Real_Root([0.5,-4,5.5,-1],root,f2,1)
+Plotter(root,f,"-1+5.5*x-4*x**2+0.5*x**3")
 plt.axhline(color="black")
 plt.axvline(color="black")
 plt.grid()
