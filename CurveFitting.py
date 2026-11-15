@@ -62,9 +62,15 @@ Plotter(x,f2,params2,"grey","a*x**3+b*x**2+c*x+d")
 print(f'Parametrs3: a = {params3[0]} | b = {params3[1]} | c = {params3[2]}')
 print(f'Error3: {error3}')
 Plotter(x,f3,params3,"blue","a+b*np.sin(x)+c*x**3")
-real_params=sci.curve_fit(f1,x,y)[0]
-a_real,b_real,c_real=real_params
-print(f'Real Parametrs: a = {a_real} | b = {b_real} | c = {c_real}')
+real_params1=sci.curve_fit(f1,x,y)[0]
+real_params2=sci.curve_fit(f2,x,y)[0]
+real_params3=sci.curve_fit(f3,x,y)[0]
+a_real,b_real,c_real=real_params1
+print(f'Real Parametrs1: a = {a_real} | b = {b_real} | c = {c_real}')
+a_real,b_real,c_real,d_real=real_params2
+print(f'Real Parametrs2: a = {a_real} | b = {b_real} | c = {c_real} | d = {d_real}')
+a_real,b_real,c_real=real_params3
+print(f'Real Parametrs3: a = {a_real} | b = {b_real} | c = {c_real}')
 plt.scatter(x,y,color="red")
 plt.axvline(color="black")
 plt.axhline(color="black")
