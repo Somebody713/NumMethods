@@ -20,8 +20,8 @@ def Forward(matrix,vector):
             factor=matrix[i][k]/matrix[k][k]
             
             for j in range(len(matrix[i])):
-                matrix[i][j]=matrix[i][j]-factor*matrix[i-1][j]
-            vector[k]=vector[k]-vector[i-1]*factor
+                matrix[i][j]=matrix[i][j]-factor*matrix[k][j]
+            vector[k]=vector[k]-vector[k]*factor
 def Backward(matrix,vector):
     x=[0]*len(matrix)
     for k in range(len(matrix)-1,-1,-1):
@@ -31,11 +31,11 @@ def Backward(matrix,vector):
         x[k]=sum/matrix[k][k]
     return x
 matrix=[
-    [2,1,-1],
-    [5,2,2],
-    [3,1,1]
+    [1,1,-1],
+    [6,2,2],
+    [-3,4,1]
 ]
-vector=[1,-4,5]
+vector=[-3,2,1]
 Forward(matrix,vector)
 x=Backward(matrix,vector)
 print(matrix)
