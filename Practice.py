@@ -205,17 +205,58 @@ import scipy.optimize as sci
 #     print(f"Result : {result} Iterations: {iterations}")
 # Taylor_PI(1000,0.001)
 
-def Maclaurian_Series(a,b,eps=0.01):
-    iterations=0
-    result=0
-    for i in range(-1,2):
-        term=(-1)**i/(2**i)
-        iterations+=1
-        result+=term
-        if abs(term)<eps:
-            print("It belows eps")
-            break
-    print(f'Result: {result} Iterations: {iterations}')
-Maclaurian_Series(-1,1)      
-        
+# def Maclaurian_Series(a,b,eps=0.01):
+#     iterations=0
+#     result=0
+#     for i in range(-1,2):
+#         term=(-1)**i/(2**i)
+#         iterations+=1
+#         result+=term
+#         if abs(term)<eps:
+#             print("It belows eps")
+#             break
+#     print(f'Result: {result} Iterations: {iterations}')
+# Maclaurian_Series(-1,1)      
+
+def f(x,a,b):
+    return a*x+b
+def f2(x,a,b,c):
+    return a+b*x+c*x**2
+def f3(x,a,b,c,d):
+    return a*x**3+b*x**2+c*x+d
+def Curve_Fit(x,y):
+    A=np.array([
+        [np.sum(x**6),np.sum(x**5),np.sum(x**4),np.sum(x**3)],
+        [np.sum(x**5),np.sum(x**4),np.sum(x**3),np.sum(x**2)],
+        [np.sum(x**4),np.sum(x**3),np.sum(x**2),np.sum(x)],
+        [np.sum(x**3),np.sum(x**2),np.sum(x),len(x)]
+    ])
+    B=np.array([np.sum(x**3*y),np.sum(x**2*y),np.sum(x*y),np.sum(y)])
+    
+    params=np.linalg.solve(A,B)
+    return params
+def Error(x,y,f,params):
+    residuals=[0]*len(x)
+    error=0
+    for i in range(len(x)):
+        residuals[i]=(f(x[i],*params)-y[i])**2
+        error+=residuals[i]
+    print(f'Error: {error}')
+    return residuals
+x=np.array([1,2,3,4,5,6,7,8,9])
+y=np.array([2,-4,8,1,9,4,5,2,0])
+x_plot=np.linspace(np.min(x),np.max(x),500)
+real_params=sci.curve_fit(f3,x,y)[0]
+params=Curve_Fit(x,y)
+residuals=Error(x,y,f3,params)
+y_plot=f3(x_plot,*real_params)
+plt.plot(x_plot,y_plot,color="blue",label="Real Curve")
+plt.plot(x_plot,f3(x_plot,*params),color="green",label="My Curve")
+plt.scatter(x,y,color="red")
+plt.axvline(color="black")
+plt.axhline(color="black")
+plt.grid(True)
+plt.legend()
+plt.show()
+
     
