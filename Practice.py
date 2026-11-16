@@ -90,39 +90,103 @@ import scipy.optimize as sci
 # plt.title("Newton and Secant")
 # plt.show()
 
-def f1(x,y,z):
-    return x+y-z-3
-def f2(x,y,z):
-    return x**2+y**2+z**2-5
-def f3(x,y,z):
-    return np.exp(x)+x*y-x*z-1
-def Jacobian(x,y,z):
-    return np.array([
-        [1,1,-1],
-        [2*x,2*y,2*z],
-        [np.exp(x)+y-z,x,-x]
-    ])
-def Solver(x,y,z,n,eps):
-    iterations=0
+# def f1(x,y,z):
+#     return x+y-z-3
+# def f2(x,y,z):
+#     return x**2+y**2+z**2-5
+# def f3(x,y,z):
+#     return np.exp(x)+x*y-x*z-1
+# def Jacobian(x,y,z):
+#     return np.array([
+#         [1,1,-1],
+#         [2*x,2*y,2*z],
+#         [np.exp(x)+y-z,x,-x]
+#     ])
+# def Solver(x,y,z,n,eps):
+#     iterations=0
     
+#     while iterations<n:
+#         F=np.array([f1(x,y,z),f2(x,y,z),f3(x,y,z)])
+#         J=Jacobian(x,y,z)
+#         delta=np.linalg.solve(J,-F)
+#         x=x+delta[0]
+#         y=y+delta[1]
+#         z=z+delta[2]
+#         iterations+=1
+#         error=np.linalg.norm(delta)
+#         if error<eps:
+#             print("It below than eps")
+#             break
+#     print(f'Roots x = {x} | y = {y} | z = {z}')
+#     print(f'Answers: f1 = {f1(x,y,z)} | f2 = {f2(x,y,z)} | f3 = {f3(x,y,z)}')
+#     print(f'Iterations: {iterations}')
+#     if iterations>0:
+#         print(f'Error: {error}')
+# Solver(2,2,2,50,10**-4)
+
+def f(x):
+    return -0.6*x**2+2.4*x+5.5
+def f2(x):
+    return x**2*abs(np.cos(np.sqrt(x)))-5
+def f3(x):
+    return x**4-8*x**3-35*x**2+450*x-1001
+def Real_Root(root,coeficients):
+    roots=np.roots(coeficients)
+    real_roots=np.sort(roots[np.isreal(roots)].real)
+    answer=real_roots[1]
+    if root is None:
+        return
+    errorS=abs((answer-root)/answer)
+    print(f'ErrorS: {errorS}')
+def NonLinear_Real_Root(root,f):
+    answer=sci.fsolve(f,root)[0]
+    if  root is None:
+        return
+    errorS=abs((answer-root)/answer)
+    print(f'ErrorS: {errorS}')
+def Bisection_Method(a,b,f,n,coeficients,eps=0):
+    iterations=0
+    old_c=None
+    if f(a)==0:
+        c=a
+    elif f(b)==0:
+        c=b
     while iterations<n:
-        F=np.array([f1(x,y,z),f2(x,y,z),f3(x,y,z)])
-        J=Jacobian(x,y,z)
-        delta=np.linalg.solve(J,-F)
-        x=x+delta[0]
-        y=y+delta[1]
-        z=z+delta[2]
-        iterations+=1
-        error=np.linalg.norm(delta)
-        if error<eps:
-            print("It below than eps")
+        if f(a)*f(b)>0:
+            return None
+        c=(a+b)/2
+        if f(a)*f(c)<0:
+            b=c
+        elif f(c)*f(b)<0:
+            a=c
+        else:
+            print("Real root found")
             break
-    print(f'Roots x = {x} | y = {y} | z = {z}')
-    print(f'Answers: f1 = {f1(x,y,z)} | f2 = {f2(x,y,z)} | f3 = {f3(x,y,z)}')
-    print(f'Iterations: {iterations}')
+        if old_c is not None:
+            errorA=abs((c-old_c)/c)
+            print(f'ErrorA: {errorA}')
+            Real_Root(c,coeficients)
+        old_c=c
+        iterations+=1
+        error=abs(b-a)/2
+        if error<eps:
+            print("it belows eps")
+            break
+    print(f'Root: {c} Answer: {f(c)} Iterations: {iterations}')
     if iterations>0:
         print(f'Error: {error}')
-Solver(2,2,2,50,10**-4)
-        
-        
+    return c
+root=Bisection_Method(4.5,6,f3,5,[1,-8,-35,450,-1001],0.01) 
+x=np.linspace(-10,10,500)
+y=f3(x)
+plt.plot(x,y,color="green",label="Function")
+plt.scatter(root,f3(root),color="red",label="Root")
+plt.axhline(color="black")
+plt.axvline(color="black")
+plt.ylabel("f(x)")
+plt.xlabel("x")
+plt.grid(True)
+plt.legend()
+plt.show()
+       
     
