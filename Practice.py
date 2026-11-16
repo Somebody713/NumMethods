@@ -259,47 +259,78 @@ import scipy.optimize as sci
 # plt.legend()
 # plt.show()
 
-def MaxInRow(matrix):
-    scalar=[0]*len(matrix)
-    for i in range(len(matrix)):
-        scalar[i]=np.max([abs(matrix[i][k]) for k in range(len(matrix))])
-    return scalar
-def Forward(matrix,vector):
-    scalar=MaxInRow(matrix)
-    for k in range(len(matrix)-1):
-        max_element=0
-        max_row=0
-        for m in range(len(matrix)):
-            if abs(matrix[m][k]/scalar[m])>max_element:
-                max_element=matrix[m][k]/scalar[m]
-                max_row=m
-        matrix[k],matrix[max_row]=matrix[max_row],matrix[k]
-        vector[k],vector[max_row]=vector[max_row],vector[k]
-        scalar[k],scalar[max_row]=scalar[max_row],scalar[k]
-        for i in range(k+1,len(matrix)):
+# def MaxInRow(matrix):
+#     scalar=[0]*len(matrix)
+#     for i in range(len(matrix)):
+#         scalar[i]=np.max([abs(matrix[i][k]) for k in range(len(matrix))])
+#     return scalar
+# def Forward(matrix,vector):
+#     scalar=MaxInRow(matrix)
+#     for k in range(len(matrix)-1):
+#         max_element=0
+#         max_row=0
+#         for m in range(len(matrix)):
+#             if abs(matrix[m][k]/scalar[m])>max_element:
+#                 max_element=matrix[m][k]/scalar[m]
+#                 max_row=m
+#         matrix[k],matrix[max_row]=matrix[max_row],matrix[k]
+#         vector[k],vector[max_row]=vector[max_row],vector[k]
+#         scalar[k],scalar[max_row]=scalar[max_row],scalar[k]
+#         for i in range(k+1,len(matrix)):
             
-            factor=matrix[i][k]/matrix[k][k]
+#             factor=matrix[i][k]/matrix[k][k]
             
-            for j in range(k,len(matrix)):
-                matrix[i][j]=matrix[i][j]-factor*matrix[k][j]
-            vector[i]=vector[i]-vector[k]*factor
-def Backward(matrix,vector):
-    x=[0]*len(matrix)
-    for i in range(len(matrix)-1,-1,-1):
-        sum=vector[i]
-        for j in range(i,len(matrix)):
-            sum-=matrix[i][j]*x[j]
-        x[i]=sum/matrix[i][i]
-    return x
-matrix=[
-    [1,1,-1],
-    [6,2,2],
-    [-3,4,1]
-]
-vector=[-3,2,1]
-Forward(matrix,vector)
-answers=Backward(matrix,vector)
-print(matrix)
-print(vector)
-print(answers)
+#             for j in range(k,len(matrix)):
+#                 matrix[i][j]=matrix[i][j]-factor*matrix[k][j]
+#             vector[i]=vector[i]-vector[k]*factor
+# def Backward(matrix,vector):
+#     x=[0]*len(matrix)
+#     for i in range(len(matrix)-1,-1,-1):
+#         sum=vector[i]
+#         for j in range(i,len(matrix)):
+#             sum-=matrix[i][j]*x[j]
+#         x[i]=sum/matrix[i][i]
+#     return x
+# matrix=[
+#     [1,1,-1],
+#     [6,2,2],
+#     [-3,4,1]
+# ]
+# vector=[-3,2,1]
+# Forward(matrix,vector)
+# answers=Backward(matrix,vector)
+# print(matrix)
+# print(vector)
+# print(answers)
+
+
+def f(x,y):
+    return np.sin(x+1)-y-1.2
+def g(x,y):
+    return 2*x+np.cos(y)-2
+def Jacobian(x,y):
+    return np.array([
+        [np.cos(x+1),-1],
+        [2,-np.sin(y)]
+    ])
+def Solver(x,y,n,eps=0):
     
+    iterations=0
+    while iterations<n:
+        F=np.array([
+            f(x,y),
+            g(x,y)
+        ])
+        J=Jacobian(x,y)
+        delta=np.linalg.solve(J,-F)
+        x=x+delta[0]
+        y=y+delta[1]
+        iterations+=1
+        error=np.sqrt(delta[0]**2+delta[1]**2)
+        if error<eps:
+            print("It belows eps")
+            break
+    print(f'Roots : x = {x} y = {y} Answers: f(x,y) = {f(x,y)} g(x,y) = {g(x,y)}')
+    print(f'Error: {error}')
+Solver(1,2,100,0.0001)
+        
