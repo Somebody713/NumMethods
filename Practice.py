@@ -124,69 +124,98 @@ import scipy.optimize as sci
 #         print(f'Error: {error}')
 # Solver(2,2,2,50,10**-4)
 
-def f(x):
-    return -0.6*x**2+2.4*x+5.5
-def f2(x):
-    return x**2*abs(np.cos(np.sqrt(x)))-5
-def f3(x):
-    return x**4-8*x**3-35*x**2+450*x-1001
-def Real_Root(root,coeficients):
-    roots=np.roots(coeficients)
-    real_roots=np.sort(roots[np.isreal(roots)].real)
-    answer=real_roots[1]
-    if root is None:
-        return
-    errorS=abs((answer-root)/answer)
-    print(f'ErrorS: {errorS}')
-def NonLinear_Real_Root(root,f):
-    answer=sci.fsolve(f,root)[0]
-    if  root is None:
-        return
-    errorS=abs((answer-root)/answer)
-    print(f'ErrorS: {errorS}')
-def Bisection_Method(a,b,f,n,coeficients,eps=0):
-    iterations=0
-    old_c=None
-    if f(a)==0:
-        c=a
-    elif f(b)==0:
-        c=b
-    while iterations<n:
-        if f(a)*f(b)>0:
-            return None
-        c=(a+b)/2
-        if f(a)*f(c)<0:
-            b=c
-        elif f(c)*f(b)<0:
-            a=c
-        else:
-            print("Real root found")
-            break
-        if old_c is not None:
-            errorA=abs((c-old_c)/c)
-            print(f'ErrorA: {errorA}')
-            Real_Root(c,coeficients)
-        old_c=c
-        iterations+=1
-        error=abs(b-a)/2
-        if error<eps:
-            print("it belows eps")
-            break
-    print(f'Root: {c} Answer: {f(c)} Iterations: {iterations}')
-    if iterations>0:
-        print(f'Error: {error}')
-    return c
-root=Bisection_Method(4.5,6,f3,5,[1,-8,-35,450,-1001],0.01) 
-x=np.linspace(-10,10,500)
-y=f3(x)
-plt.plot(x,y,color="green",label="Function")
-plt.scatter(root,f3(root),color="red",label="Root")
-plt.axhline(color="black")
-plt.axvline(color="black")
-plt.ylabel("f(x)")
-plt.xlabel("x")
-plt.grid(True)
-plt.legend()
-plt.show()
+# def f(x):
+#     return -0.6*x**2+2.4*x+5.5
+# def f2(x):
+#     return x**2*abs(np.cos(np.sqrt(x)))-5
+# def f3(x):
+#     return x**4-8*x**3-35*x**2+450*x-1001
+# def Real_Root(root,coeficients):
+#     roots=np.roots(coeficients)
+#     real_roots=np.sort(roots[np.isreal(roots)].real)
+#     answer=real_roots[1]
+#     if root is None:
+#         return
+#     errorS=abs((answer-root)/answer)
+#     print(f'ErrorS: {errorS}')
+# def NonLinear_Real_Root(root,f):
+#     answer=sci.fsolve(f,root)[0]
+#     if  root is None:
+#         return
+#     errorS=abs((answer-root)/answer)
+#     print(f'ErrorS: {errorS}')
+# def Bisection_Method(a,b,f,n,coeficients,eps=0):
+#     iterations=0
+#     old_c=None
+#     if f(a)==0:
+#         c=a
+#     elif f(b)==0:
+#         c=b
+#     while iterations<n:
+#         if f(a)*f(b)>0:
+#             return None
+#         c=(a+b)/2
+#         if f(a)*f(c)<0:
+#             b=c
+#         elif f(c)*f(b)<0:
+#             a=c
+#         else:
+#             print("Real root found")
+#             break
+#         if old_c is not None:
+#             errorA=abs((c-old_c)/c)
+#             print(f'ErrorA: {errorA}')
+#             Real_Root(c,coeficients)
+#         old_c=c
+#         iterations+=1
+#         error=abs(b-a)/2
+#         if error<eps:
+#             print("it belows eps")
+#             break
+#     print(f'Root: {c} Answer: {f(c)} Iterations: {iterations}')
+#     if iterations>0:
+#         print(f'Error: {error}')
+#     return c
+# root=Bisection_Method(4.5,6,f3,5,[1,-8,-35,450,-1001],0.01) 
+# x=np.linspace(-10,10,500)
+# y=f3(x)
+# plt.plot(x,y,color="green",label="Function")
+# plt.scatter(root,f3(root),color="red",label="Root")
+# plt.axhline(color="black")
+# plt.axvline(color="black")
+# plt.ylabel("f(x)")
+# plt.xlabel("x")
+# plt.grid(True)
+# plt.legend()
+# plt.show()
        
+
+# def Taylor_PI(n,eps=0):
+#     result=0
+#     term=None
+#     iterations=0
+#     while iterations <n:
+#         if term is not None:
+#             if abs(term)<eps:
+#                 print("It belows eps")
+#                 break
+#         term=((-1)**iterations*4)/math.factorial(2*iterations+1)
+#         iterations+=1
+#         result+=term
+#     print(f"Result : {result} Iterations: {iterations}")
+# Taylor_PI(1000,0.001)
+
+def Maclaurian_Series(a,b,eps=0.01):
+    iterations=0
+    result=0
+    for i in range(-1,2):
+        term=(-1)**i/(2**i)
+        iterations+=1
+        result+=term
+        if abs(term)<eps:
+            print("It belows eps")
+            break
+    print(f'Result: {result} Iterations: {iterations}')
+Maclaurian_Series(-1,1)      
+        
     
