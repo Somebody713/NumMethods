@@ -218,45 +218,88 @@ import scipy.optimize as sci
 #     print(f'Result: {result} Iterations: {iterations}')
 # Maclaurian_Series(-1,1)      
 
-def f(x,a,b):
-    return a*x+b
-def f2(x,a,b,c):
-    return a+b*x+c*x**2
-def f3(x,a,b,c,d):
-    return a*x**3+b*x**2+c*x+d
-def Curve_Fit(x,y):
-    A=np.array([
-        [np.sum(x**6),np.sum(x**5),np.sum(x**4),np.sum(x**3)],
-        [np.sum(x**5),np.sum(x**4),np.sum(x**3),np.sum(x**2)],
-        [np.sum(x**4),np.sum(x**3),np.sum(x**2),np.sum(x)],
-        [np.sum(x**3),np.sum(x**2),np.sum(x),len(x)]
-    ])
-    B=np.array([np.sum(x**3*y),np.sum(x**2*y),np.sum(x*y),np.sum(y)])
+# def f(x,a,b):
+#     return a*x+b
+# def f2(x,a,b,c):
+#     return a+b*x+c*x**2
+# def f3(x,a,b,c,d):
+#     return a*x**3+b*x**2+c*x+d
+# def Curve_Fit(x,y):
+#     A=np.array([
+#         [np.sum(x**6),np.sum(x**5),np.sum(x**4),np.sum(x**3)],
+#         [np.sum(x**5),np.sum(x**4),np.sum(x**3),np.sum(x**2)],
+#         [np.sum(x**4),np.sum(x**3),np.sum(x**2),np.sum(x)],
+#         [np.sum(x**3),np.sum(x**2),np.sum(x),len(x)]
+#     ])
+#     B=np.array([np.sum(x**3*y),np.sum(x**2*y),np.sum(x*y),np.sum(y)])
     
-    params=np.linalg.solve(A,B)
-    return params
-def Error(x,y,f,params):
-    residuals=[0]*len(x)
-    error=0
-    for i in range(len(x)):
-        residuals[i]=(f(x[i],*params)-y[i])**2
-        error+=residuals[i]
-    print(f'Error: {error}')
-    return residuals
-x=np.array([1,2,3,4,5,6,7,8,9])
-y=np.array([2,-4,8,1,9,4,5,2,0])
-x_plot=np.linspace(np.min(x),np.max(x),500)
-real_params=sci.curve_fit(f3,x,y)[0]
-params=Curve_Fit(x,y)
-residuals=Error(x,y,f3,params)
-y_plot=f3(x_plot,*real_params)
-plt.plot(x_plot,y_plot,color="blue",label="Real Curve")
-plt.plot(x_plot,f3(x_plot,*params),color="green",label="My Curve")
-plt.scatter(x,y,color="red")
-plt.axvline(color="black")
-plt.axhline(color="black")
-plt.grid(True)
-plt.legend()
-plt.show()
+#     params=np.linalg.solve(A,B)
+#     return params
+# def Error(x,y,f,params):
+#     residuals=[0]*len(x)
+#     error=0
+#     for i in range(len(x)):
+#         residuals[i]=(f(x[i],*params)-y[i])**2
+#         error+=residuals[i]
+#     print(f'Error: {error}')
+#     return residuals
+# x=np.array([1,2,3,4,5,6,7,8,9])
+# y=np.array([2,-4,8,1,9,4,5,2,0])
+# x_plot=np.linspace(np.min(x),np.max(x),500)
+# real_params=sci.curve_fit(f3,x,y)[0]
+# params=Curve_Fit(x,y)
+# residuals=Error(x,y,f3,params)
+# y_plot=f3(x_plot,*real_params)
+# plt.plot(x_plot,y_plot,color="blue",label="Real Curve")
+# plt.plot(x_plot,f3(x_plot,*params),color="green",label="My Curve")
+# plt.scatter(x,y,color="red")
+# plt.axvline(color="black")
+# plt.axhline(color="black")
+# plt.grid(True)
+# plt.legend()
+# plt.show()
 
+def MaxInRow(matrix):
+    scalar=[0]*len(matrix)
+    for i in range(len(matrix)):
+        scalar[i]=np.max([abs(matrix[i][k]) for k in range(len(matrix))])
+    return scalar
+def Forward(matrix,vector):
+    scalar=MaxInRow(matrix)
+    for k in range(len(matrix)-1):
+        max_element=0
+        max_row=0
+        for m in range(len(matrix)):
+            if abs(matrix[m][k]/scalar[m])>max_element:
+                max_element=matrix[m][k]/scalar[m]
+                max_row=m
+        matrix[k],matrix[max_row]=matrix[max_row],matrix[k]
+        vector[k],vector[max_row]=vector[max_row],vector[k]
+        scalar[k],scalar[max_row]=scalar[max_row],scalar[k]
+        for i in range(k+1,len(matrix)):
+            
+            factor=matrix[i][k]/matrix[k][k]
+            
+            for j in range(k,len(matrix)):
+                matrix[i][j]=matrix[i][j]-factor*matrix[k][j]
+            vector[i]=vector[i]-vector[k]*factor
+def Backward(matrix,vector):
+    x=[0]*len(matrix)
+    for i in range(len(matrix)-1,-1,-1):
+        sum=vector[i]
+        for j in range(i,len(matrix)):
+            sum-=matrix[i][j]*x[j]
+        x[i]=sum/matrix[i][i]
+    return x
+matrix=[
+    [1,1,-1],
+    [6,2,2],
+    [-3,4,1]
+]
+vector=[-3,2,1]
+Forward(matrix,vector)
+answers=Backward(matrix,vector)
+print(matrix)
+print(vector)
+print(answers)
     
